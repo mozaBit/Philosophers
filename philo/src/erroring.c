@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:16:40 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 11:30:48 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 18:45:58 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,3 +23,8 @@ void	error_print(char *str)
 	write(1, "\n", 1);
 	return (exit(1));
 }
+
+/*
+	------ error print ------
+	*	prints error if found and exit the program
+*/

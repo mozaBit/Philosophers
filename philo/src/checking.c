@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 16:45:35 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 13:37:24 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 18:31:03 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,3 +59,17 @@ void	death_checker(t_philo_state *state, t_philosopher *p)
 			state->all_ate = 1;
 	}
 }
+
+/*
+	------ check args ------
+	check if we have at least 4 args and at most 5 args
+
+	------ death checker ------
+	checks for a dead philosopher
+		*	if his last_meal is bigger (>) then time_to_die
+	handle the all_ate state, when all philos ate at least (number
+		of meals must eaten times)
+
+	------ exit checker ------
+	Joins the threads and destroys the mutexes
+*/

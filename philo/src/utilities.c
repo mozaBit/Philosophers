@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:40:22 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 14:13:42 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 18:52:52 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,17 @@ long long	time_diff(long long past, long long pres)
 {
 	return (pres - past);
 }
+
+/*
+	------ ft_atoi ------
+	Permet to parse the value got by argv
+
+	------ timestamp ------
+	Permet to get the time right now in milliseconds
+
+	------ sleep for a sec ------
+	Permet to sleep (time) by sleep 50micro_sec portions of time
+
+	------ time_diff ------
+	calculate the diff between two times
+*/

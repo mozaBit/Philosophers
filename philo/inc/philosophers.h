@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 16:42:14 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 11:46:51 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 19:00:05 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include <stdio.h>
+# include "../ft_printf/include/ft_printf.h"
 
 /*
 	t_philosopher
@@ -76,9 +76,9 @@ long long		timestamp(void);
 	processing
 */
 void			processing(t_philo_state *philo_state);
-void			*p_thread(void	*philo_void);
+void			*acting(void	*philo_void);
 void			action_print(t_philo_state *philo_state, int id, char *str);
-void			philo_eats(t_philosopher *philo);
+void			eating(t_philosopher *philo);
 void			sleep_for_a_sec(long long time, t_philo_state *philo_state);
 long long		time_diff(long long past, long long pres);
 void			death_checker(t_philo_state *state, t_philosopher *p);

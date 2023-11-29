@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:36:08 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 13:09:13 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 19:39:10 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ of times each Philosopher must eat");
 	{
 		philo_state->nb_must_eat = -1;
 	}
-	if (philo_state->nb_philos < 2 || philo_state->nb_philos > 250
+	if (philo_state->nb_philos < 1 || philo_state->nb_philos > 250
 		|| philo_state->time_to_die < 0 || philo_state->time_to_eat < 0
 		|| philo_state->time_to_sleep < 0)
 		error_print("Error\nWrong Value of one or more Args");
@@ -69,3 +69,19 @@ void	philos_initilizer(t_philo_state	*state)
 		state->philosophers[idx].philo_state = state;
 	}
 }
+
+/*
+	------ Initializer ------
+	fills the philo_state structure with the appropriate values from the argv
+	runs the mutex_initilizer and the philo_initilizer
+
+	------ mutex initializer ------
+	*	Initilizes all the forks (number of forks == number of philos)
+	*	Initilize the printing mutex (display) to prevent from printin multiple
+		nonesence the same time
+	*	Initilize the eating mutex (meal_check) to prevent from two philos
+		eating the same time
+
+	------ philo_initializer ------
+	*	initialize the philo structure with all neccessary values
+*/
