@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 19:06:12 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 14:18:11 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 16:38:10 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	processing(t_philo_state *philo_state)
 	printf("philos: %i\n", philo_state->nb_philos);
 	while (idx < philo_state->nb_philos)
 	{
-		if (pthread_create(&(philos[idx].thread_id), NULL, p_thread, &(philos[idx])))
+		if (pthread_create(&(philos[idx].thread_id), NULL, \
+p_thread, &(philos[idx])))
 			error_print("Error\nUnable to create Thread");
 		philos[idx].t_last_ate = timestamp();
 		idx++;
