@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 19:06:12 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 12:16:11 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 14:18:11 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	processing(t_philo_state *philo_state)
 	printf("philos: %i\n", philo_state->nb_philos);
 	while (idx < philo_state->nb_philos)
 	{
-		if (pthread_create(&(philos[idx].thread_id), NULL, p_thread, &philo_state->philosophers[idx]))
+		if (pthread_create(&(philos[idx].thread_id), NULL, p_thread, &(philos[idx])))
 			error_print("Error\nUnable to create Thread");
 		philos[idx].t_last_ate = timestamp();
 		idx++;
 	}
-	death_checker(philo_state, philos);
+	death_checker(philo_state, philo_state->philosophers);
 	exit_launcher(philo_state, philos);
 }
 
@@ -39,10 +39,10 @@ void	*p_thread(void	*philo_void)
 	t_philo_state	*state;
 
 	idx = 0;
-	philo = (t_philosopher *) philo_void;
+	philo = (t_philosopher *)philo_void;
 	state = philo->philo_state;
 	if (philo->id % 2)
-		usleep(15000);
+		usleep(10000);
 	while (!(state->died))
 	{
 		philo_eats(philo);

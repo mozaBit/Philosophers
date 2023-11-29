@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:40:22 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 12:20:43 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/29 14:13:42 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,13 @@ long long	timestamp(void)
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_sec / 1000));
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
 void	sleep_for_a_sec(long long time, t_philo_state *philo_state)
 {
 	long long	i;
 
-	printf("here\n");
 	i = timestamp();
 	while (!(philo_state->died))
 	{
