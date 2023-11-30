@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 19:06:12 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 19:50:36 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:49:56 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 void	processing(t_philo_state *philo_state)
 {
 	int				idx;
-	t_philosopher	*philos;
+	t_philosopher	*ph;
 
-	idx = 0;
-	philos = philo_state->philosophers;
+	idx = -1;
+	ph = philo_state->philosophers;
 	philo_state->f_timestamp = timestamp();
-	while (idx < philo_state->nb_philos)
+	while (++idx < philo_state->nb_philos)
 	{
-		if (pthread_create(&(philos[idx].thread_id), NULL, \
-acting, &(philos[idx])))
+		if (pthread_create(&(ph[idx].thread_id), NULL, acting, &(ph[idx])))
 			error_print("Error\nUnable to create Thread");
-		philos[idx].t_last_ate = timestamp();
-		idx++;
+		pthread_mutex_lock(&(philo_state->t_last_ate_mutex));
+		ph[idx].t_last_ate = timestamp();
+		pthread_mutex_unlock(&(philo_state->t_last_ate_mutex));
 	}
 	death_checker(philo_state, philo_state->philosophers);
-	exit_launcher(philo_state, philos);
+	exit_launcher(philo_state, ph);
 }
 
 void	*acting(void	*philo_void)
@@ -41,8 +41,11 @@ void	*acting(void	*philo_void)
 	state = philo->philo_state;
 	if (philo->id % 2)
 		usleep(15000);
+	pthread_mutex_lock(&(state->died_mutex));
 	while (!(state->died))
 	{
+
+		pthread_mutex_unlock(&(state->died_mutex));
 		eating(philo);
 		if (philo->nb_ate >= 1)
 		{
@@ -50,9 +53,16 @@ void	*acting(void	*philo_void)
 			sleep_for_a_sec(state->time_to_sleep, state);
 			action_print(state, philo->id, "is thinking");
 		}
+		pthread_mutex_lock(&(state->all_ate_mutex));
 		if (state->all_ate)
+		{
+			pthread_mutex_unlock(&(state->all_ate_mutex));
 			break ;
+		}
+		pthread_mutex_unlock(&(state->all_ate_mutex));
+		pthread_mutex_lock(&(state->died_mutex));
 	}
+	pthread_mutex_unlock(&(state->died_mutex));
 	return (NULL);
 }
 
@@ -63,30 +73,30 @@ void	eating(t_philosopher *philo)
 	state = philo->philo_state;
 	if (philo->philo_state->nb_philos >= 2)
 	{
-		pthread_mutex_lock(&(state->forks[philo->left_fork_id]));
-		action_print(state, philo->id, "has taken a fork");
-		pthread_mutex_lock(&(state->forks[philo->right_fork_id]));
-		action_print(state, philo->id, "has taken a fork");
+		take_forks(state, philo);
 		pthread_mutex_lock(&(state->meal_check));
 		action_print(state, philo->id, "is eating");
+		pthread_mutex_lock(&(state->t_last_ate_mutex));
 		philo->t_last_ate = timestamp();
-		pthread_mutex_unlock(&(state->meal_check));
+		pthread_mutex_unlock(&(state->t_last_ate_mutex));
 		sleep_for_a_sec(state->time_to_eat, state);
 		philo->nb_ate += 1;
-		pthread_mutex_unlock(&(state->forks[philo->left_fork_id]));
-		pthread_mutex_unlock(&(state->forks[philo->right_fork_id]));
+		pthread_mutex_unlock(&(state->meal_check));
+		drop_forks(state, philo);
 	}
 }
 
 void	action_print(t_philo_state *philo_state, int id, char *str)
 {
 	pthread_mutex_lock(&(philo_state->display));
+	pthread_mutex_lock(&(philo_state->died_mutex));
 	if (!(philo_state->died))
 	{
-		ft_printf("%l ", timestamp() - philo_state->f_timestamp);
-		ft_printf("%i ", id + 1);
-		ft_printf("%s\n", str);
+		printf("%lli ", timestamp() - philo_state->f_timestamp);
+		printf("%i ", id + 1);
+		printf("%s\n", str);
 	}
+	pthread_mutex_unlock(&(philo_state->died_mutex));
 	pthread_mutex_unlock(&(philo_state->display));
 }
 
@@ -110,7 +120,7 @@ void	action_print(t_philo_state *philo_state, int id, char *str)
 	*	adds into philo->number_of_time_eaten
 	*	unlock the forks
 
-	------ action print ------
+	------ action print ------ Done
 	*	prints the action happening using ft_orintf and a mutex
 		to not have aconflict while printing multiple nonsense
 */

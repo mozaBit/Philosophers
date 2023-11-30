@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 16:45:35 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 18:31:03 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:55:01 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,35 +29,56 @@ void	exit_launcher(t_philo_state *state, t_philosopher *philos)
 	while (++i < state->nb_philos)
 		pthread_mutex_destroy(&(state->forks[i]));
 	pthread_mutex_destroy(&(state->display));
+	pthread_mutex_destroy(&(state->t_last_ate_mutex));
+	pthread_mutex_destroy(&(state->died_mutex));
+	pthread_mutex_destroy(&(state->all_ate_mutex));
+	pthread_mutex_destroy(&(state->meal_check));
 }
 
 void	death_checker(t_philo_state *state, t_philosopher *p)
 {
 	int	i;
 
+	pthread_mutex_lock(&(state->all_ate_mutex));
 	while (!(state->all_ate))
 	{
+		pthread_mutex_unlock(&(state->all_ate_mutex));
 		i = -1;
+		pthread_mutex_lock(&(state->meal_check));
+		pthread_mutex_lock(&(state->t_last_ate_mutex));
 		while (++i < state->nb_philos && !(state->died))
 		{
-			pthread_mutex_lock(&(state->meal_check));
 			if (time_diff(p[i].t_last_ate, timestamp()) > state->time_to_die)
 			{
+				pthread_mutex_lock(&(state->died_mutex));
 				action_print(state, i, "died");
 				state->died = 1;
+				pthread_mutex_unlock(&(state->died_mutex));
 			}
-			pthread_mutex_unlock(&(state->meal_check));
 			usleep(100);
 		}
+		pthread_mutex_unlock(&(state->meal_check));
+		pthread_mutex_unlock(&(state->t_last_ate_mutex));
+		pthread_mutex_lock(&(state->died_mutex));
 		if (state->died)
+		{
+			pthread_mutex_unlock(&(state->died_mutex));
 			break ;
+		}
+		pthread_mutex_unlock(&(state->died_mutex));
 		i = 0;
 		while (state->nb_must_eat != -1 && i < state->nb_philos
 			&& p[i].nb_ate >= state->nb_must_eat)
 			i++;
 		if (i == state->nb_philos)
+		{
+			pthread_mutex_lock(&(state->all_ate_mutex));
 			state->all_ate = 1;
+			pthread_mutex_unlock(&(state->all_ate_mutex));
+		}
+		pthread_mutex_lock(&(state->all_ate_mutex));
 	}
+		pthread_mutex_unlock(&(state->all_ate_mutex));
 }
 
 /*

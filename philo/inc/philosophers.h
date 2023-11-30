@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 16:42:14 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 19:00:05 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/30 15:03:54 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include "../ft_printf/include/ft_printf.h"
+# include <stdio.h>
 
 /*
 	t_philosopher
@@ -46,6 +46,9 @@ typedef struct s_philo_state
 	pthread_mutex_t			meal_check;
 	pthread_mutex_t			forks[250];
 	pthread_mutex_t			display;
+	pthread_mutex_t			all_ate_mutex;
+	pthread_mutex_t			died_mutex;
+	pthread_mutex_t			t_last_ate_mutex;
 	struct s_philosopher	philosophers[250];
 }	t_philo_state;
 
@@ -83,5 +86,11 @@ void			sleep_for_a_sec(long long time, t_philo_state *philo_state);
 long long		time_diff(long long past, long long pres);
 void			death_checker(t_philo_state *state, t_philosopher *p);
 void			exit_launcher(t_philo_state *state, t_philosopher *philos);
+
+/*
+	pro_utilities
+*/
+void			take_forks(t_philo_state *state ,t_philosopher *philo);
+void			drop_forks(t_philo_state *state ,t_philosopher *philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: bmetehri <bmetehri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 17:36:08 by bmetehri          #+#    #+#             */
-/*   Updated: 2023/11/29 19:39:10 by bmetehri         ###   ########.fr       */
+/*   Updated: 2023/11/30 12:45:09 by bmetehri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ void	mutex_initilizer(t_philo_state *philo_state)
 			error_print("Error\nWhile Initiqlizing a mutex");
 	}
 	if (pthread_mutex_init(&(philo_state->display), NULL)
-		|| pthread_mutex_init(&(philo_state->meal_check), NULL))
+		|| pthread_mutex_init(&(philo_state->meal_check), NULL)
+		|| pthread_mutex_init(&(philo_state->all_ate_mutex), NULL)
+		|| pthread_mutex_init(&(philo_state->died_mutex), NULL)
+		|| pthread_mutex_init(&(philo_state->t_last_ate_mutex), NULL))
 		error_print("Error\nWhile Initiqlizing a mutex");
 }
 
